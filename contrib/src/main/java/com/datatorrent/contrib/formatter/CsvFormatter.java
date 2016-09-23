@@ -40,7 +40,7 @@ import com.datatorrent.api.AutoMetric;
 import com.datatorrent.api.Context;
 import com.datatorrent.contrib.parser.DelimitedSchema;
 import com.datatorrent.contrib.parser.DelimitedSchema.Field;
-import com.datatorrent.contrib.parser.DelimitedSchema.FieldType;
+import com.datatorrent.contrib.parser.Schema.FieldType;
 import com.datatorrent.lib.formatter.Formatter;
 import com.datatorrent.netlet.util.DTThrowable;
 
@@ -142,8 +142,8 @@ public class CsvFormatter extends Formatter<String>
     int fieldCount = 0;
     for (Field field : fields) {
       if (field.getType() == FieldType.DATE) {
-        String format = field.getConstraints().get(DelimitedSchema.DATE_FORMAT) == null ? null
-            : (String)field.getConstraints().get(DelimitedSchema.DATE_FORMAT);
+        String format = field.getConstraints().get(DelimitedSchema.getDateFormat()) == null ? null
+            : (String)field.getConstraints().get(DelimitedSchema.getDateFormat());
         processor[fieldCount++] = new Optional(new FmtDate(format == null ? "dd/MM/yyyy" : format));
       } else {
         processor[fieldCount++] = new Optional();

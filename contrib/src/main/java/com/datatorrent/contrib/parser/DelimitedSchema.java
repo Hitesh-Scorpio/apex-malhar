@@ -55,37 +55,9 @@ import org.slf4j.LoggerFactory;
  *
  * @since 3.4.0
  */
-public class DelimitedSchema
+public class DelimitedSchema extends Schema
 {
 
-  /**
-   * JSON key string for separator
-   */
-  private static final String SEPARATOR = "separator";
-  /**
-   * JSON key string for quote character
-   */
-  private static final String QUOTE_CHAR = "quoteChar";
-  /**
-   * JSON key string for line delimiter
-   */
-  private static final String LINE_DELIMITER = "lineDelimiter";
-  /**
-   * JSON key string for fields array
-   */
-  private static final String FIELDS = "fields";
-  /**
-   * JSON key string for name of the field within fields array
-   */
-  private static final String NAME = "name";
-  /**
-   * JSON key string for type of the field within fields array
-   */
-  private static final String TYPE = "type";
-  /**
-   * JSON key string for constraints for each field
-   */
-  private static final String CONSTRAINTS = "constraints";
   /**
    * JSON key string for required constraint
    */
@@ -119,21 +91,26 @@ public class DelimitedSchema
    */
   public static final String REGEX_PATTERN = "pattern";
   /**
-   * JSON key string for date format constraint
-   */
-  public static final String DATE_FORMAT = "format";
-  /**
    * JSON key string for locale constraint
    */
   public static final String LOCALE = "locale";
   /**
-   * JSON key string for true value constraint
+   * JSON key string for separator
    */
-  public static final String TRUE_VALUE = "trueValue";
+  private static final String SEPARATOR = "separator";
   /**
-   * JSON key string for false value constraint
+   * JSON key string for quote character
    */
-  public static final String FALSE_VALUE = "falseValue";
+  private static final String QUOTE_CHAR = "quoteChar";
+  /**
+   * JSON key string for line delimiter
+   */
+  private static final String LINE_DELIMITER = "lineDelimiter";
+  /**
+   * JSON key string for constraints for each field
+   */
+  private static final String CONSTRAINTS = "constraints";
+  private static final Logger logger = LoggerFactory.getLogger(DelimitedSchema.class);
   /**
    * delimiter character provided in schema. Default is ,
    */
@@ -147,21 +124,9 @@ public class DelimitedSchema
    */
   private String lineDelimiter = "\r\n";
   /**
-   * This holds the list of field names in the same order as in the schema
-   */
-  private List<String> fieldNames = new LinkedList<String>();
-  /**
    * This holds list of {@link Field}
    */
   private List<Field> fields = new LinkedList<Field>();
-
-  /**
-   * Supported data types
-   */
-  public enum FieldType
-  {
-    BOOLEAN, DOUBLE, INTEGER, FLOAT, LONG, SHORT, CHARACTER, STRING, DATE
-  };
 
   public DelimitedSchema(String json)
   {
@@ -207,16 +172,6 @@ public class DelimitedSchema
   }
 
   /**
-   * Get the list of field names mentioned in schema
-   *
-   * @return fieldNames
-   */
-  public List<String> getFieldNames()
-  {
-    return Collections.unmodifiableList(fieldNames);
-  }
-
-  /**
    * Get the delimiter character
    *
    * @return delimiterChar
@@ -250,7 +205,7 @@ public class DelimitedSchema
   public String toString()
   {
     return "DelimitedSchema [delimiterChar=" + delimiterChar + ", quoteChar=" + quoteChar + ", lineDelimiter="
-        + lineDelimiter + ", fieldNames=" + fieldNames + ", fields=" + fields + "]";
+      + lineDelimiter + ", fieldNames=" + fieldNames + ", fields=" + fields + "]";
   }
 
   /**
@@ -268,16 +223,8 @@ public class DelimitedSchema
    * field has a name, type and a set of associated constraints.
    *
    */
-  public class Field
+  public class Field extends Schema.Field
   {
-    /**
-     * name of the field
-     */
-    String name;
-    /**
-     * Data type of the field
-     */
-    FieldType type;
     /**
      * constraints associated with the field
      */
@@ -285,48 +232,7 @@ public class DelimitedSchema
 
     public Field(String name, String type)
     {
-      this.name = name;
-      this.type = FieldType.valueOf(type.toUpperCase());
-    }
-
-    /**
-     * Get the name of the field
-     *
-     * @return name
-     */
-    public String getName()
-    {
-      return name;
-    }
-
-    /**
-     * Set the name of the field
-     *
-     * @param name
-     */
-    public void setName(String name)
-    {
-      this.name = name;
-    }
-
-    /**
-     * Get {@link FieldType}
-     *
-     * @return type
-     */
-    public FieldType getType()
-    {
-      return type;
-    }
-
-    /**
-     * Set {@link FieldType}
-     *
-     * @param type
-     */
-    public void setType(FieldType type)
-    {
-      this.type = type;
+      super(name, type);
     }
 
     /**
@@ -355,7 +261,5 @@ public class DelimitedSchema
       return "Fields [name=" + name + ", type=" + type + ", constraints=" + constraints + "]";
     }
   }
-
-  private static final Logger logger = LoggerFactory.getLogger(DelimitedSchema.class);
 
 }
